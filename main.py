@@ -29,7 +29,7 @@ def home():
 @app.route("/api/aviation/getAllUsers/",methods=["GET","POST"])
 def getAllUsers():
     db,cursor = database()
-    query="select * from usersData"
+    query="select * from usersdata"
     cursor.execute(query)
     result=cursor.fetchall()
     return jsonify({"response":result})
@@ -39,7 +39,7 @@ def registerUser():
     db,cursor = database()
     data=request.form
     if data:
-        query1="select * from usersData where email=%s"
+        query1="select * from usersdata where email=%s"
         cursor.execute(query1,(data["email"],))
         result1=cursor.fetchone()
         #print(result1)
@@ -61,7 +61,7 @@ def login():
     data = json.loads(data)
     #print(data["email"])
     if data:
-        query1="select * from usersData where email=%s and authKey=%s"
+        query1="select * from usersdata where email=%s and authKey=%s"
         cursor.execute(query1,(data["email"],data["authCode"]))
         result1=cursor.fetchone()
         if result1:
@@ -77,7 +77,7 @@ def login():
 @app.route("/api/aviation/getUserInfo/<email>",methods=["GET","POST"])
 def getUserInfo(email):
     db,cursor = database()
-    query1="select email,department,post,name,age,loc from usersData where email=%s"
+    query1="select email,department,post,name,age,loc from usersdata where email=%s"
     cursor.execute(query1,(email,))
     result=cursor.fetchone()
     response={}
@@ -123,7 +123,7 @@ def addRFQ():
             cursor.execute(query,(i,))
             result2=cursor.fetchone()
             partNo.append(str(result2[0]))
-            query2="insert into itemStatus(partNo, rfqNo, status) values(%s,%s,%s)"
+            query2="insert into itemstatus(partNo, rfqNo, status) values(%s,%s,%s)"
             values2=(result2[0],data["rfqNo"],"Not Recieved")
             cursor.execute(query2,values2)
             db.commit()
@@ -226,7 +226,7 @@ def getRFQs():
                 if result2:
                     temp3.append(result2[0])
                     temp3.append(result2[1])
-                    query3="select status from itemStatus where rfqNo=%s and partNo=%s"
+                    query3="select status from itemstatus where rfqNo=%s and partNo=%s"
                     cursor.execute(query3,(row[1],result2[2]))
                     result3=cursor.fetchone()
                     #print(result3)
@@ -302,7 +302,7 @@ def addOffer():
             values=(data["offerNo"],data["date"],data["validityDate"],alternate,qty,result0[1],data["unitPrice"],totalPrice,discount,data["offerDiscount"],offerFreightCharges,data["offerFreightCharges"],finalPrice,offerFrieghtChargersWithUnitPrice,str(data["validityDate"]),"Not Recieved",data["rfqNo"],data["partNo"],code)
             cursor.execute(query,values)
             db.commit()
-            query3="update itemStatus set status=%s where partNo=%s and rfqNo=%s"
+            query3="update itemstatus set status=%s where partNo=%s and rfqNo=%s"
             cursor.execute(query3,("Recieved",result0[0],data["rfqNo"]))
             db.commit()
         return jsonify({"response":"success","reference":code})
@@ -334,7 +334,7 @@ def getOfferDetails(id):
             document="D:/docsTemp/"+str(result[i])
             response[columns[i]]=document
         else:response[columns[i]]=result[i]
-    query="select status from itemStatus where rfqNo=%s and partNo in (select id from bom where partNo=%s)"
+    query="select status from itemstatus where rfqNo=%s and partNo in (select id from bom where partNo=%s)"
     cursor.execute(query,(response['rfqNumber'],response['partNo']))
     result2=cursor.fetchone()
     response['itemOfferStatus']=result2[0]
@@ -373,7 +373,7 @@ def searchRFQ():
             cursor.execute(query3)
             result3=cursor.fetchall()
             result=result+result3
-    query4="select rfqNo from itemStatus where status like '%"+data['search']+"%'"
+    query4="select rfqNo from itemstatus where status like '%"+data['search']+"%'"
     cursor.execute(query4)
     result4=cursor.fetchall()
     if result4:
@@ -405,7 +405,7 @@ def searchRFQ():
                 if result2:
                     temp3.append(result2[0])
                     temp3.append(result2[1])
-                    query3="select status from itemStatus where rfqNo=%s and partNo=%s"
+                    query3="select status from itemstatus where rfqNo=%s and partNo=%s"
                     cursor.execute(query3,(row[1],result2[2]))
                     result3=cursor.fetchone()
                     #print(result3)
@@ -432,7 +432,7 @@ def searchRFQ():
 @app.route("/api/aviation/getRfqOfferItems/<customer>",methods=["GET","POST"])
 def getRfqOfferItems(customer):
     db,cursor = database()
-    query="select partNo,status,rfqNo,id from itemStatus where status=%s or status=%s"
+    query="select partNo,status,rfqNo,id from itemstatus where status=%s or status=%s"
     cursor.execute(query,('Recieved','Not Recieved'))
     result=cursor.fetchall()
     response=[]
@@ -492,7 +492,7 @@ def getRfqOfferItems(customer):
 @app.route("/api/aviation/getRfqOfferItemsAmended/<customer>/<id>",methods=["GET","POST"])
 def getRfqOfferItemsAmended(customer,id):
     db,cursor = database()
-    query="select partNo,status,rfqNo,id,poId from itemStatus where poId=%s or poId=0"
+    query="select partNo,status,rfqNo,id,poId from itemstatus where poId=%s or poId=0"
     cursor.execute(query,(id,))
     result=cursor.fetchall()
     #print(id)
@@ -624,7 +624,7 @@ def addPO():
         result0=cursor.fetchone()
         count=0
         for i in data["items"]:
-            query="select partNo,rfqNo,status from itemStatus where id=%s"
+            query="select partNo,rfqNo,status from itemstatus where id=%s"
             cursor.execute(query,(int(i),))
             result=cursor.fetchone()
             if result:
@@ -646,11 +646,11 @@ def addPO():
                 discount=round(discount, 2)
                 frieght=(float(data["prices"][count])-discount)*(float(data['frieght'][count])/100)
                 frieght=round(frieght, 2)
-                query="insert into poItems(poNumber, partNo, nomenclature, quantity, reference, price, status, discountAmount,discountPercent,frieghtCharges,frieghtPercent) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                query="insert into poitems(poNumber, partNo, nomenclature, quantity, reference, price, status, discountAmount,discountPercent,frieghtCharges,frieghtPercent) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                 values=(data["no"],partNo,result2[1],data['quantity'][count],result[1],round(float(data['prices'][count]),2),'Not Recieved',discount,round(float(data['discounts'][count]),2),frieght,data['frieght'][count])
                 cursor.execute(query,values)
                 db.commit()
-                query="update itemStatus set status=%s,poId=%s where id=%s"
+                query="update itemstatus set status=%s,poId=%s where id=%s"
                 cursor.execute(query,("PO Recieved",result0[0],i))
                 db.commit()
             count+=1
@@ -683,7 +683,7 @@ def getAllPOs():
         for row in result:
             temp={"id":row[0], "number":row[1], "date":row[2], "totalAmount":row[3],"customer":row[4],"status":row[5]}
             po.append(temp)
-    query2="select * from poItems"
+    query2="select * from poitems"
     cursor.execute(query2)
     result2=cursor.fetchall()
     if result2:
@@ -697,7 +697,7 @@ def getAllPOs():
 @app.route("/api/aviation/searchPO/<search>",methods=["GET","POST"])
 def searchPO(search):
     db,cursor = database()
-    query="select DISTINCT(number) from po where number like %s or date like %s or customer like %s or number in (select poNumber from poItems where partNo like %s or status like %s or reference like %s or nomenclature like %s);"
+    query="select DISTINCT(number) from po where number like %s or date like %s or customer like %s or number in (select poNumber from poitems where partNo like %s or status like %s or reference like %s or nomenclature like %s);"
     values=("%"+search+"%","%"+search+"%","%"+search+"%","%"+search+"%","%"+search+"%","%"+search+"%","%"+search+"%")
     cursor.execute(query,values)
     result=cursor.fetchall()
@@ -714,7 +714,7 @@ def searchPO(search):
                 for row in result:
                     temp={"id":row[0], "number":row[1], "date":row[2], "totalAmount":row[3],"customer":row[4],"status":row[5]}
                     po.append(temp)
-            query2="select * from poItems where poNumber=%s"
+            query2="select * from poitems where poNumber=%s"
             cursor.execute(query2,(row0[0],))
             result2=cursor.fetchall()
             if result2:
@@ -733,7 +733,7 @@ def getPODetails(id):
     result=cursor.fetchone()
     fileLoc="D:/docsTemp/"+str(result[7])
     po={"id":result[0], "number":result[1], "date":result[2], "totalAmount":result[3], "customer":result[4],"status":result[5],"delivery":result[6],"fileLoc":fileLoc}
-    query="select * from poItems where poNumber=%s"
+    query="select * from poitems where poNumber=%s"
     cursor.execute(query,(result[1],))
     result2=cursor.fetchall()
     items=[]
@@ -768,7 +768,7 @@ def getPO(id):
     result=cursor.fetchone()
     #print(result)
     po={"id":result[0], "number":result[1], "date":str(result[2]), "totalAmount":result[3], "customer":result[4],"deliveryPeriod":str(result[6])}
-    query2="select partNo,reference from poItems where poNumber=%s"
+    query2="select partNo,reference from poitems where poNumber=%s"
     cursor.execute(query2,(result[1],))
     result2=cursor.fetchall()
     items=[]
@@ -779,7 +779,7 @@ def getPO(id):
             if tempStatus!=-1:
                 items.append(row[0])
             else:
-                query3="select id from itemStatus where partNo in (select id from bom where partNo=%s);"
+                query3="select id from itemstatus where partNo in (select id from bom where partNo=%s);"
                 cursor.execute(query3,(row[0],))
                 result3=cursor.fetchone()
                 print(result3)
@@ -865,10 +865,10 @@ def reviseOffer():
         values=(data["date"],data["validityDate"],alternate,qty,result0[1],data["unitPrice"],totalPrice,discount,data["offerDiscount"],offerFreightCharges,data["offerFreightCharges"],finalPrice,offerFrieghtChargersWithUnitPrice,str(data["validityDate"]),"Not Recieved",data["rfqNo"],data["partNo"],code,data["offerNo"])
         cursor.execute(query,values)
         db.commit()
-        query3="update itemStatus set status=%s where partNo=%s and rfqNo=%s"
+        query3="update itemstatus set status=%s where partNo=%s and rfqNo=%s"
         cursor.execute(query3,("Recieved",result0[0],data["rfqNo"]))
         db.commit()
-        query3="update itemStatus set status=%s where partNo=%s and rfqNo=%s"
+        query3="update itemstatus set status=%s where partNo=%s and rfqNo=%s"
         cursor.execute(query3,("Recieved",result0[0],data["rfqNo"]))
         db.commit()
     return jsonify({"response":"success","reference":code})
@@ -898,7 +898,7 @@ def amendPO():
     for i in data["items"]:
         if i.find(" | ")!=-1:
             i=i.replace("value","")
-            query0="delete from poItems where partNo=%s and poNumber = (select poNumber from po where id=%s)"
+            query0="delete from poitems where partNo=%s and poNumber = (select poNumber from po where id=%s)"
             cursor.execute(query0,(i,data["poId"]))
             db.commit()
             pn=i.split(" | ")
@@ -909,12 +909,12 @@ def amendPO():
             discount=round(discount, 2)
             frieght=(float(data["prices"][count])-discount)*(float(data['frieght'][count])/100)
             frieght=round(frieght, 2)
-            query="insert into poItems(poNumber, partNo, nomenclature, quantity, reference, price, status, discountAmount,discountPercent,frieghtCharges,frieghtPercent) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            query="insert into poitems(poNumber, partNo, nomenclature, quantity, reference, price, status, discountAmount,discountPercent,frieghtCharges,frieghtPercent) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             values=(data["no"],i,resultTemp[0],data['quantity'][count],"",round(float(data['prices'][count]),2),'Not Recieved',discount,round(float(data['discounts'][count]),2),frieght,data['frieght'][count])
             cursor.execute(query,values)
             db.commit()
         else:
-            query="select partNo,rfqNo,status from itemStatus where id=%s"
+            query="select partNo,rfqNo,status from itemstatus where id=%s"
             cursor.execute(query,(int(i),))
             result=cursor.fetchone()
             if result:
@@ -934,21 +934,21 @@ def amendPO():
                         partNo=partNo+" | "+resultTemp2[0]
                 discount=(float(data['discounts'][count])/100)*float(data["prices"][count])
                 discount=round(discount, 2)
-                queryTemp3="select partNo from poItems where partNo like '%"+partNo+"%' and poNumber=%s"
+                queryTemp3="select partNo from poitems where partNo like '%"+partNo+"%' and poNumber=%s"
                 cursor.execute(queryTemp3,(data['no'],))
                 resultTemp3=cursor.fetchone()
                 if resultTemp3:
                     partNo=resultTemp3[0]
-                query0="delete from poItems where partNo=%s and poNumber = (select poNumber from po where id=%s)"
+                query0="delete from poitems where partNo=%s and poNumber = (select poNumber from po where id=%s)"
                 cursor.execute(query0,(partNo,data["poId"]))
                 db.commit()
                 frieght=(float(data["prices"][count])-discount)*(float(data['frieght'][count])/100)
                 frieght=round(frieght, 2)
-                query="insert into poItems(poNumber, partNo, nomenclature, quantity, reference, price, status, discountAmount,discountPercent,frieghtCharges,frieghtPercent) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                query="insert into poitems(poNumber, partNo, nomenclature, quantity, reference, price, status, discountAmount,discountPercent,frieghtCharges,frieghtPercent) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                 values=(data["no"],partNo,result2[1],data['quantity'][count],result[1],round(float(data['prices'][count])-discount,2),'Not Recieved',discount,round(float(data['discounts'][count]),2),frieght,data['frieght'][count])
                 cursor.execute(query,values)
                 db.commit()
-                query="update itemStatus set status=%s,poId=%s where id=%s"
+                query="update itemstatus set status=%s,poId=%s where id=%s"
                 cursor.execute(query,("PO Recieved",data['poId'],i))
                 db.commit()
             count+=1
@@ -964,10 +964,10 @@ def deleteRFQ(data):
     if result:
         queries=["INSERT INTO trashrfq SELECT * FROM rfq WHERE rEQNumber=%s",
         "INSERT INTO trashoffer SELECT * FROM offer WHERE rfqNumber = %s",
-        "INSERT INTO trashitemstatus SELECT * FROM itemStatus WHERE rfqNo = %s",
+        "INSERT INTO trashitemstatus SELECT * FROM itemstatus WHERE rfqNo = %s",
         "delete from rfq where rEQNumber=%s",
         "delete from offer where rfqNumber=%s",
-        "delete from itemStatus where rfqNo=%s"]
+        "delete from itemstatus where rfqNo=%s"]
         for i in queries:
             cursor.execute(i,(result[0],))
         db.commit()
@@ -981,7 +981,7 @@ def getPOItems(id):
     result=cursor.fetchone()
     if result:
         poDetails={"id":id,"number":result[0], "date":str(result[1]), "totalAmount":result[2], "customer":result[3], "deliveryPeriod":str(result[4])}
-        query2="select * from poItems where poNumber=%s"
+        query2="select * from poitems where poNumber=%s"
         cursor.execute(query2,(result[0],))
         result2=cursor.fetchall()
         items=[]
@@ -1042,7 +1042,7 @@ def addoc():
 @app.route("/api/aviation/getOCBOM/<id>",methods=["GET","POST"])
 def getOCBOM(id):
     db,cursor = database()
-    query0="select poNumber from oc where number in (select ocNumber from ocItems where id=%s)"
+    query0="select poNumber from oc where number in (select ocNumber from ocitems where id=%s)"
     cursor.execute(query0,(id,))
     result0=cursor.fetchone()
     query01="select customer from po where number=%s"
@@ -1127,7 +1127,7 @@ def uploadOCEditDocument(code):
     format=temp[1]
     #file.save(os.path.join("/root/var/www/ajcl/aviationSystem/documents/", secure_filename(str(code)+format)))
     file.save(os.path.join("D:\docsTemp", secure_filename(str(code)+"."+format)))
-    query="update ocItems set fileLoc=%s where fileLoc=%s"
+    query="update ocitems set fileLoc=%s where fileLoc=%s"
     cursor.execute(query,(str(code)+"."+format,str(code)))
     db.commit()
     return redirect("https://google.com")
@@ -1304,7 +1304,7 @@ def addInvoice():
             cursor.execute(query2,(i,))
             result2=cursor.fetchone()
             if result2:
-                query3="insert into invoiceItems(invoiceNumber, sn, partNumber, nomenclature, inlieu, qty, price, discount, frieght, refference) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                query3="insert into invoiceitems(invoiceNumber, sn, partNumber, nomenclature, inlieu, qty, price, discount, frieght, refference) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                 cursor.execute(query3,(data["invoiceNumber"],result2[1],result2[2],result2[3],result2[5],result2[4],prices[count],discounts[count],frieghts[count],result2[0]))
                 db.commit()
                 query4="update plitems set status=%s where id=%s"
@@ -1431,7 +1431,7 @@ def addCRV():
         count=0
         previous=""
         for i in data["items"]:
-            query3="insert into crvItems(serialNumber, partNumber, nomenclature, inlieu, qty, crvNumber, damageQuantity, missingQuantity, comment, refference) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            query3="insert into crvitems(serialNumber, partNumber, nomenclature, inlieu, qty, crvNumber, damageQuantity, missingQuantity, comment, refference) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             query4="select invoiceNumber, sn, partNumber, nomenclature, inlieu, qty, refference from invoiceitems where id=%s"
             cursor.execute(query4,(i,))
             result4=cursor.fetchone()
@@ -1506,7 +1506,7 @@ def getInvoiceDetails(number):
     if result:
         fileLoc="D:/docsTemp/"+str(result[4])
         invoice={"id":result[0], "number":result[1], "projectNumber":result[2], "date":str(result[3]), "fileLoc":fileLoc}
-    query2="select * from invoiceItems where invoiceNumber=%s"
+    query2="select * from invoiceitems where invoiceNumber=%s"
     cursor.execute(query2,(number,))
     result2=cursor.fetchall()
     items=[]
