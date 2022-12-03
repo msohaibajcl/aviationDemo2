@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>PO Form</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="cssForms/forms.css" rel="stylesheet" type="text/css" />
+  <script src="index.js"></script>
+  <style>
+    .modal{
+        background: #80808070 !important;
+        overflow-y: scroll;
+    }
+    .modal-content{
+      top: 100px;
+      width: 86%;
+      margin: 0 auto;
+      padding: 12px;
+    }
+    .modal-content h5{
+        padding: 6px;
+        text-align: center;
+        background: #d1d2d3;
+        color: #556e5a;
+        margin-top: 12px;
+    }
+    ol{
+      margin-top: 6px;
+      margin-bottom: 1rem;
+      max-height: 156px;
+      overflow-y: scroll;
+      /* box-shadow: 0 0 28px #cdcdcd; */
+      border-radius: 4px;
+      border-style: groove;
+      background: #0f2f5691;
+    }
+    .poFormTempSeletedItem input{
+      width: auto !important;
+      display: block;
+      margin: 3px auto;
+    }
+    .formBody{
+      width: 90%;
+    }
+    .heading{
+      background-color: #074113cf;
+      padding: 4px;
+      font-weight: 700;
+      font-size: 16px !important;
+      border-radius: 30px;
+    }
+   </style>
+  </style>
+</head>
+<body style="background: #79a281b5" onload="loadCreateOCForm()">
+
+<div class="formBody container" id="formBody">
+  <h4 class="heading">SALES ORDER CONFIRMATION FORM</h4>
+  <table class="headTable">
+    <tr>
+      <th>PO No.</th>
+      <th>PO Date</th>
+      <th>No. Items</th>
+      <th>PO Amount</th>
+      <th>OC Amount</th>
+    </tr>
+    <tr>
+      <td id="poNumber">####</td>
+      <td id="poDate">####</td>
+      <td id="noItems">####</td>
+      <td id="poAmount">####</td>
+      <td id="ocAmount">####</td>
+    </tr>
+  </table>
+  <br>
+  <div class="form-group">
+    <label for="ocNumber">OC Number:</label>
+    <input type="text" class="form-control" id="ocNumber" placeholder="Enter OC Number" name="ocNumber">
+  </div>
+  <div class="form-group">
+    <label for="date">OC Date:</label>
+    <input type="date" class="form-control" onchange="selectOCItemDates()" id="date" placeholder="Enter OC Date" name="date">
+  </div>
+  <div class="form-group" style="width: 100%;overflow: scroll;">
+    <label for="ocItems">OC Items :<button style="background: #36653f;color: white;border: none;border-radius: 5px;" onclick="selectAllItemsOCForm()" id="offerFormItemSelectStatus">Select All</button></label>
+    <table id="ocItems" class="ocItems">
+      <tr>
+      <th>Add</th>
+      <th>S.No</th>
+      <th>Part No</th>
+      <th>Nomenclature</th>
+      <th>In Lieu</th>
+      <th>Date</th>
+      <th>No. Days</th>
+      <th>Delivery Date</th>
+      <th>Unit Price</th>
+      <th>Qty</th>
+      <th>DISC. %</th>
+      <th>Frieght %</th>
+      <th>Total Price</th>
+    </tr>
+    <!-- <tr>
+      <td><input type="checkbox"></td>
+      <td>1</td>
+      <td>Part No</td>
+      <td>Nomenclature</td>
+      <td>NSN</td>
+      <td style="padding:0px;"><button id="inlieu" onclick="addOCInLieuItem(this)">Add Item</button></td>
+      <td style="padding:0px;"><input type="text" placeholder="Enter"></td>
+      <td style="padding:0px;"><input readonly style="background:lightgray;border:none;" type="date"></td>
+      <td style="padding:0px;"><input type="number" placeholder="Enter"></td>
+      <td style="padding:0px;"><input type="number" placeholder="Enter"></td>
+      <td style="padding:0px;"><input type="number" placeholder="Enter"></td>
+      <td style="padding:0px;"><input type="number" placeholder="Enter"></td>
+      <td><strong>1211</strong></td>
+    </tr> -->
+    </table>
+  </div>
+  <div class="form-group">
+    <form id="ocDocForm" method="post" enctype="multipart/form-data">
+      <label for="attachDoc">Attach Doc:</label>
+      <input type="file" id="attachDoc" accept="image/png, image/jpeg, application/pdf" style="background: #36653f;" name="attachDoc" class="uploadFile" required /><br>
+      <span>Note: Upload Document having extension png, jpeg or pdf</span>
+    </form>
+  </div>
+  <!-- <button class="submit btn btn-primary" onclick="addRFQ()">Submit</button> -->
+  <input style="background: #36653f;" class="submit btn btn-primary" onclick="addOC()" value="SUBMIT">
+  </div>
+
+<!-- Inleus Part Details -->
+<div class="container">
+  <!-- <a class="btn btn-primary" data-toggle="modal" href="#ignismyModal">open Popup</a> -->
+  <div class="modal fade" id="InleiusModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-contentOffer modal-content">
+            <div class="offerInLieuItemHeader modal-header" style="background-color: #074113cf;">
+              <h1>Add In Lieu Item</h1>
+                <button type="button" class="close" data-dismiss="modal" onclick="inactiveInlieusModalCross()" aria-label=""><span>×</span></button>
+             </div>
+  
+            <div class="modal-body">
+               
+    <div class="thank-you-pop">
+      <h3>In Lieu Part Details</h3>
+      <input list="itemSets" oninput="onInput()" id="searchInlieuPartNo" name="searchInlieuPartNo" type="text" placeholder="Enter Part No or Nomenclature" required>
+      <datalist id="itemSets"></datalist>
+    <div class="lieuSelectedItemDetails">
+        <div>Part No:</div>
+        <div><h6 id="pn" style="font-weight:700;margin-bottom:16px"></h6></div>
+        <div>Nomanclature: </div>
+        <div><h6 id="nomanclature" style="font-weight:700;margin-bottom:16px"></h6></div>
+        <div>NSN</div>
+        <div><input type="text" id="nsn" value="0" placeholder="Enter NSN" required></div>
+        <div>Quantity</div>
+        <div><input type="number" id="qtyLieu" placeholder="Enter Quantity" required><br></div>
+    </div>
+      <a><button style="border:none;background:#8BC34A;" onclick="inactiveInlieusModal()">Add</button></a>
+     </div>           
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- OC Success -->
+<div class="container">
+  <!-- <a class="btn btn-primary" data-toggle="modal" href="#ignismyModal">open Popup</a> -->
+  <div class="modal fade" id="ignismyModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label=""><span>×</span></button> -->
+             </div>
+  
+            <div class="modal-body">
+               
+    <div class="thank-you-pop">
+      <img src="http://goactionstations.co.uk/wp-content/uploads/2017/03/Green-Round-Tick.png" alt="">
+      <h2>Congratulation!</h1>
+      <p>OC added successfully</p>
+      <h5 class="cupon-pop">Transactional Id: <span id="successti"></span></h5>
+      <h5 class="cupon-pop">OC Number: <span id="ocNumberDisplay"></span></h5>
+      <!-- <h5 class="cupon-pop">Customer RFQ No: <span id="successCustomerRFQ"></span></h5> -->
+      <h5 class="cupon-pop">Total Amount: <span id="successAmount"></span></h5>
+      <a onclick="submitOCDocument()">Continue...</a>
+     </div>           
+            </div>
+        </div>
+    </div>
+  </div>
+  </div>
+
+  <script>
+  // Get the modal
+  var modal = document.getElementById("myModal");
+  
+  // Get the button that opens the modal
+  var btn = document.getElementById("myBtn");
+  
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+  
+  // When the user clicks the button, open the modal 
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+  
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+  
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+  </script>
+</body>
+</html>

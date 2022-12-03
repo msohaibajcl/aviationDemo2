@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>AWB Form</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="cssForms/forms.css" rel="stylesheet" type="text/css" />
+  <script src="index.js"></script>
+  <style>
+    .modal{
+        background: #80808070 !important;
+        overflow-y: scroll;
+    }
+    .modal-content{
+      top: 100px;
+      width: 86%;
+      margin: 0 auto;
+      padding: 12px;
+    }
+    .modal-content h5{
+        padding: 6px;
+        text-align: center;
+        background: #d1d2d3;
+        color: #556e5a;
+        margin-top: 12px;
+    }
+    ol{
+      margin-top: 6px;
+      margin-bottom: 1rem;
+      max-height: 156px;
+      overflow-y: scroll;
+      /* box-shadow: 0 0 28px #cdcdcd; */
+      border-radius: 4px;
+      border-style: groove;
+      background: #0f2f5691;
+    }
+    .poFormTempSeletedItem input{
+      width: auto !important;
+      display: block;
+      margin: 3px auto;
+    }
+    .formBody{
+      width: 90%;
+    }
+    .heading{
+      background-color: #a9c23a;
+      padding: 4px;
+      font-weight: 700;
+      font-size: 16px !important;
+      border-radius: 30px;
+      color: black;
+    }
+   </style>
+  </style>
+</head>
+<body style="background: #a9c23a5d"  onload="loadAWBForm()">
+
+<div class="formBody container" id="formBody">
+  <h4 class="plHead heading" >AWB FORM</h4>
+  </table>
+  <br>
+  <div class="form-group">
+    <label for="awbNumber">AWB Number</label>
+    <input type="text" class="form-control" id="awbNumber" placeholder="Enter AWB Number" name="pklNumber">
+  </div>
+  <div class="form-group">
+    <label for="awbDate">AWB Date:</label>
+    <input type="date" class="form-control" id="awbDate" placeholder="Enter AWB Date" name="date">
+  </div>
+  <div class="searchPKL form-group">
+    <div>
+    <label for="searchpooc">Add Packing List</label>
+    <input type="text" class="form-control" oninput="onInput()" id="searchPackingList" list="packingList" placeholder="Enter Packing List Number" name="searchpooc">
+    <datalist id="packingList"></datalist>
+    </div>
+    <!-- <div><button onclick="addPackingListToInvoice()">ADD</button></div> -->
+    <div></div>
+  </div>
+  <div class="packingListsContainer form-group" id="awbListsContainer">
+    <!-- <div>0000&nbsp;&nbsp;&nbsp;<img src="images/delete-left-solid.svg" class="packingListRemoveTag"></div> -->
+  </div>
+  <div class="form-group">
+    <form id="awbDocForm" method="post" enctype="multipart/form-data">
+      <label for="attachDoc">Attach Doc:</label>
+      <input type="file" id="attachDoc" accept="image/png, image/jpeg, application/pdf" style="background: #a9c23a;color:black" name="attachDoc" class="uploadFile" required /><br>
+      <span>Note: Upload Document having extension png, jpeg or pdf</span>
+    </form>
+  </div>
+  <!-- <button class="submit btn btn-primary" onclick="addRFQ()">Submit</button> -->
+  <input style="background: #a9c23a;color:black;" class="submit btn btn-primary" onclick="addAWB()" value="SUBMIT">
+  </div>
+
+<!-- Inleus Part Details -->
+<div class="container">
+  <!-- <a class="btn btn-primary" data-toggle="modal" href="#ignismyModal">open Popup</a> -->
+  <div class="modal fade" id="InleiusModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-contentOffer modal-content">
+            <div class="offerInLieuItemHeader modal-header" style="background-color: #a9c23a;color: black;">
+              <h1>Add In Lieu Item</h1>
+                <button type="button" class="close" data-dismiss="modal" onclick="inactiveInlieusModalCross()" aria-label=""><span>×</span></button>
+             </div>
+  
+            <div class="modal-body">
+               
+    <div class="thank-you-pop">
+      <h3>In Lieu Part Details</h3>
+      <!-- <input list="itemSets" oninput="onInput()" id="searchInlieuPartNo" name="searchInlieuPartNo" type="text" placeholder="Enter Part No or Nomenclature" required>
+      <datalist id="itemSets"></datalist> -->
+    <div class="lieuSelectedItemDetails">
+        <div>Part No:</div>
+        <div><h6 id="pn" style="font-weight:700;margin-bottom:16px"></h6></div>
+        <div>Nomanclature: </div>
+        <div><h6 id="nomanclature" style="font-weight:700;margin-bottom:16px"></h6></div>
+        <div>NSN</div>
+        <div><input type="text" id="nsn" value="0" placeholder="Enter NSN" required></div>
+        <div>Quantity</div>
+        <div><input type="number" id="qtyLieu" placeholder="Enter Quantity" required><br></div>
+    </div>
+      <a><button style="border:none;background:#a9c23a;color:black;" onclick="inactiveInlieusModal()">Add</button></a>
+     </div>           
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- OC Success -->
+<div class="container">
+  <!-- <a class="btn btn-primary" data-toggle="modal" href="#ignismyModal">open Popup</a> -->
+  <div class="modal fade" id="ignismyModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label=""><span>×</span></button> -->
+             </div>
+  
+            <div class="modal-body">
+               
+    <div class="thank-you-pop">
+      <img src="http://goactionstations.co.uk/wp-content/uploads/2017/03/Green-Round-Tick.png" alt="">
+      <h2>Congratulation!</h1>
+      <p>AWB added successfully</p>
+      <h5 class="cupon-pop">Transactional Id: <span id="successti"></span></h5>
+      <h5 class="cupon-pop">AWB Number: <span id="awbNumberDisplay"></span></h5>
+      <!-- <h5 class="cupon-pop">Customer RFQ No: <span id="successCustomerRFQ"></span></h5> -->
+      <!-- <h5 class="cupon-pop">POs: <span id="pos"></span></h5> -->
+      <a onclick="submitAWBDocument()">Continue...</a>
+     </div>           
+            </div>
+        </div>
+    </div>
+  </div>
+  </div>
+
+  <script>
+    function onInput() {
+    var val = document.getElementById("searchPackingList").value;
+    var opts = document.getElementById('packingList').childNodes;
+    for (var i = 0; i < opts.length; i++) {
+      console.log(val)
+      if (opts[i].value === val){
+        addAWBPKL(opts[i].value);
+        // alert();
+        break;
+      }
+    }
+  }
+  // Get the modal
+  var modal = document.getElementById("myModal");
+  
+  // Get the button that opens the modal
+  var btn = document.getElementById("myBtn");
+  
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+  
+  // When the user clicks the button, open the modal 
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+  
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+  
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+  </script>
+</body>
+</html>

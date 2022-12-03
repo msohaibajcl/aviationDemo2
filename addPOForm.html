@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>PO Form</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="cssForms/forms.css" rel="stylesheet" type="text/css" />
+  <script src="index.js"></script>
+  <style>
+    .modal{
+        background: #80808070 !important;
+        overflow-y: scroll;
+    }
+    .modal-content{
+      top: 0%;
+      width: 86%;
+      margin: 0 auto;
+      padding: 12px;
+    }
+    .modal-content h5{
+        padding: 6px;
+        text-align: center;
+        background: #d1d2d3;
+        color: #556e5a;
+        margin-top: 12px;
+    }
+    ol{
+      margin-top: 6px;
+      margin-bottom: 1rem;
+      max-height: 156px;
+      overflow-y: scroll;
+      /* box-shadow: 0 0 28px #cdcdcd; */
+      border-radius: 4px;
+      border-style: groove;
+      background: #0f2f5691;
+    }
+    .poFormTempSeletedItem input{
+      width: auto !important;
+      display: block;
+      margin: 3px auto;
+    }
+    .formBody{
+      width: 60%;
+    }
+   </style>
+  </style>
+</head>
+<body style="background: #79a281b5">
+
+<div class="formBody container" id="formBody">
+  <h4 class="heading" style="background-color: #63896b">ADD PO FORM</h4>
+  <div class="form-group">
+    <label for="customer">Customer:</label>
+    <select onchange="loadPosForm()" name="customer" class="dropDown" id="customer">
+      <option value="select" selected>Select</option>
+      <option value="PN">PN</option>
+      <option value="PAF">PAF</option>
+      <option value="DGPA">DGP</option>
+      <option value="CD">CD</option>
+    </select>
+  </div>
+    <div class="form-group">
+      <label for="offerNo">Purchase Order No:</label>
+      <input type="text" class="form-control" id="no" placeholder="Enter PO No" name="no" required>
+    </div>
+    <div class="form-group">
+        <label for="offerNo">Purchase Order Date:</label>
+        <input type="date" class="form-control" id="date" placeholder="Enter PO Date" name="date" required>
+    </div>
+    <div class="form-group">
+      <label for="offerNo">Delivery Period:</label>
+      <input type="number" onkeyup="setDeliverDate()" class="form-control" id="days" placeholder="Enter Days" name="date" required>
+  </div>
+    <div class="form-group">
+        <label for="offerNo">Delivery Date:</label>
+        <input readonly type="date" class="form-control" id="delivery" placeholder="Enter Delivery Period" name="delivery Period" required>
+    </div>
+    <div class="form-group">
+      <label for="currency">Currency:</label>
+      <select id="currency" class="dropDown">
+        <option>select currency</option>
+        <option value="AFN">Afghan Afghani</option>
+        <option value="ALL">Albanian Lek</option>
+        <option value="DZD">Algerian Dinar</option>
+        <option value="AOA">Angolan Kwanza</option>
+        <option value="ARS">Argentine Peso</option>
+        <option value="AMD">Armenian Dram</option>
+        <option value="AWG">Aruban Florin</option>
+        <option value="AUD">Australian Dollar</option>
+        <option value="AZN">Azerbaijani Manat</option>
+        <option value="BSD">Bahamian Dollar</option>
+        <option value="BHD">Bahraini Dinar</option>
+        <option value="BDT">Bangladeshi Taka</option>
+        <option value="BBD">Barbadian Dollar</option>
+        <option value="BYR">Belarusian Ruble</option>
+        <option value="BEF">Belgian Franc</option>
+        <option value="BZD">Belize Dollar</option>
+        <option value="BMD">Bermudan Dollar</option>
+        <option value="BTN">Bhutanese Ngultrum</option>
+        <option value="BTC">Bitcoin</option>
+        <option value="BOB">Bolivian Boliviano</option>
+        <option value="BAM">Bosnia-Herzegovina Convertible Mark</option>
+        <option value="BWP">Botswanan Pula</option>
+        <option value="BRL">Brazilian Real</option>
+        <option value="GBP">British Pound Sterling</option>
+        <option value="BND">Brunei Dollar</option>
+        <option value="BGN">Bulgarian Lev</option>
+        <option value="BIF">Burundian Franc</option>
+        <option value="KHR">Cambodian Riel</option>
+        <option value="CAD">Canadian Dollar</option>
+        <option value="CVE">Cape Verdean Escudo</option>
+        <option value="KYD">Cayman Islands Dollar</option>
+        <option value="XOF">CFA Franc BCEAO</option>
+        <option value="XAF">CFA Franc BEAC</option>
+        <option value="XPF">CFP Franc</option>
+        <option value="CLP">Chilean Peso</option>
+        <option value="CNY">Chinese Yuan</option>
+        <option value="COP">Colombian Peso</option>
+        <option value="KMF">Comorian Franc</option>
+        <option value="CDF">Congolese Franc</option>
+        <option value="CRC">Costa Rican ColÃ³n</option>
+        <option value="HRK">Croatian Kuna</option>
+        <option value="CUC">Cuban Convertible Peso</option>
+        <option value="CZK">Czech Republic Koruna</option>
+        <option value="DKK">Danish Krone</option>
+        <option value="DJF">Djiboutian Franc</option>
+        <option value="DOP">Dominican Peso</option>
+        <option value="XCD">East Caribbean Dollar</option>
+        <option value="EGP">Egyptian Pound</option>
+        <option value="ERN">Eritrean Nakfa</option>
+        <option value="EEK">Estonian Kroon</option>
+        <option value="ETB">Ethiopian Birr</option>
+        <option value="EUR">Euro</option>
+        <option value="FKP">Falkland Islands Pound</option>
+        <option value="FJD">Fijian Dollar</option>
+        <option value="GMD">Gambian Dalasi</option>
+        <option value="GEL">Georgian Lari</option>
+        <option value="DEM">German Mark</option>
+        <option value="GHS">Ghanaian Cedi</option>
+        <option value="GIP">Gibraltar Pound</option>
+        <option value="GRD">Greek Drachma</option>
+        <option value="GTQ">Guatemalan Quetzal</option>
+        <option value="GNF">Guinean Franc</option>
+        <option value="GYD">Guyanaese Dollar</option>
+        <option value="HTG">Haitian Gourde</option>
+        <option value="HNL">Honduran Lempira</option>
+        <option value="HKD">Hong Kong Dollar</option>
+        <option value="HUF">Hungarian Forint</option>
+        <option value="ISK">Icelandic KrÃ³na</option>
+        <option value="INR">Indian Rupee</option>
+        <option value="IDR">Indonesian Rupiah</option>
+        <option value="IRR">Iranian Rial</option>
+        <option value="IQD">Iraqi Dinar</option>
+        <option value="ILS">Israeli New Sheqel</option>
+        <option value="ITL">Italian Lira</option>
+        <option value="JMD">Jamaican Dollar</option>
+        <option value="JPY">Japanese Yen</option>
+        <option value="JOD">Jordanian Dinar</option>
+        <option value="KZT">Kazakhstani Tenge</option>
+        <option value="KES">Kenyan Shilling</option>
+        <option value="KWD">Kuwaiti Dinar</option>
+        <option value="KGS">Kyrgystani Som</option>
+        <option value="LAK">Laotian Kip</option>
+        <option value="LVL">Latvian Lats</option>
+        <option value="LBP">Lebanese Pound</option>
+        <option value="LSL">Lesotho Loti</option>
+        <option value="LRD">Liberian Dollar</option>
+        <option value="LYD">Libyan Dinar</option>
+        <option value="LTL">Lithuanian Litas</option>
+        <option value="MOP">Macanese Pataca</option>
+        <option value="MKD">Macedonian Denar</option>
+        <option value="MGA">Malagasy Ariary</option>
+        <option value="MWK">Malawian Kwacha</option>
+        <option value="MYR">Malaysian Ringgit</option>
+        <option value="MVR">Maldivian Rufiyaa</option>
+        <option value="MRO">Mauritanian Ouguiya</option>
+        <option value="MUR">Mauritian Rupee</option>
+        <option value="MXN">Mexican Peso</option>
+        <option value="MDL">Moldovan Leu</option>
+        <option value="MNT">Mongolian Tugrik</option>
+        <option value="MAD">Moroccan Dirham</option>
+        <option value="MZM">Mozambican Metical</option>
+        <option value="MMK">Myanmar Kyat</option>
+        <option value="NAD">Namibian Dollar</option>
+        <option value="NPR">Nepalese Rupee</option>
+        <option value="ANG">Netherlands Antillean Guilder</option>
+        <option value="TWD">New Taiwan Dollar</option>
+        <option value="NZD">New Zealand Dollar</option>
+        <option value="NIO">Nicaraguan CÃ³rdoba</option>
+        <option value="NGN">Nigerian Naira</option>
+        <option value="KPW">North Korean Won</option>
+        <option value="NOK">Norwegian Krone</option>
+        <option value="OMR">Omani Rial</option>
+        <option value="PKR">Pakistani Rupee</option>
+        <option value="PAB">Panamanian Balboa</option>
+        <option value="PGK">Papua New Guinean Kina</option>
+        <option value="PYG">Paraguayan Guarani</option>
+        <option value="PEN">Peruvian Nuevo Sol</option>
+        <option value="PHP">Philippine Peso</option>
+        <option value="PLN">Polish Zloty</option>
+        <option value="QAR">Qatari Rial</option>
+        <option value="RON">Romanian Leu</option>
+        <option value="RUB">Russian Ruble</option>
+        <option value="RWF">Rwandan Franc</option>
+        <option value="SVC">Salvadoran ColÃ³n</option>
+        <option value="WST">Samoan Tala</option>
+        <option value="SAR">Saudi Riyal</option>
+        <option value="RSD">Serbian Dinar</option>
+        <option value="SCR">Seychellois Rupee</option>
+        <option value="SLL">Sierra Leonean Leone</option>
+        <option value="SGD">Singapore Dollar</option>
+        <option value="SKK">Slovak Koruna</option>
+        <option value="SBD">Solomon Islands Dollar</option>
+        <option value="SOS">Somali Shilling</option>
+        <option value="ZAR">South African Rand</option>
+        <option value="KRW">South Korean Won</option>
+        <option value="XDR">Special Drawing Rights</option>
+        <option value="LKR">Sri Lankan Rupee</option>
+        <option value="SHP">St. Helena Pound</option>
+        <option value="SDG">Sudanese Pound</option>
+        <option value="SRD">Surinamese Dollar</option>
+        <option value="SZL">Swazi Lilangeni</option>
+        <option value="SEK">Swedish Krona</option>
+        <option value="CHF">Swiss Franc</option>
+        <option value="SYP">Syrian Pound</option>
+        <option value="STD">São Tomé and Príncipe Dobra</option>
+        <option value="TJS">Tajikistani Somoni</option>
+        <option value="TZS">Tanzanian Shilling</option>
+        <option value="THB">Thai Baht</option>
+        <option value="TOP">Tongan pa'anga</option>
+        <option value="TTD">Trinidad & Tobago Dollar</option>
+        <option value="TND">Tunisian Dinar</option>
+        <option value="TRY">Turkish Lira</option>
+        <option value="TMT">Turkmenistani Manat</option>
+        <option value="UGX">Ugandan Shilling</option>
+        <option value="UAH">Ukrainian Hryvnia</option>
+        <option value="AED">United Arab Emirates Dirham</option>
+        <option value="UYU">Uruguayan Peso</option>
+        <option value="USD" selected>US Dollar</option>
+        <option value="UZS">Uzbekistan Som</option>
+        <option value="VUV">Vanuatu Vatu</option>
+        <option value="VEF">Venezuelan BolÃ­var</option>
+        <option value="VND">Vietnamese Dong</option>
+        <option value="YER">Yemeni Rial</option>
+        <option value="ZMK">Zambian Kwacha</option>
+      </select>
+      <!-- <input type="text" class="form-control" id="currency" placeholder="Enter Unit Price" name="currency"> -->
+    </div>
+    <div class="form-group">
+        <label for="offerNo">PO Item:</label>
+        <!-- <input type="number" oninput="generateFields()" class="form-control" id="totalItem" placeholder="Enter Total Items" name="totalItem" required> -->
+        <button id="myBtn" class="addItemsButton">Add/Remove</button>
+    </div>
+    <div class="form-group">
+      <div class="addedPOItemsHeader addedPOItems">
+            <div><p>Part No</p></div>
+            <div><p>Nomenclature</p></div>
+            <div><p>Ref</p></div>
+            <div><p>Qty</p></div>
+            <div><p>Prices</p></div>
+            <div><p>Dis %</p></div>
+            <div><p>Fght %</p></div>
+            <div><p>Total</p></div>
+      </div>
+      <div class="addedPOItems" id="addedPOItems">
+      </div>
+    </div>
+    <div class="form-group">
+      <form id="poDocForm" method="post" enctype="multipart/form-data">
+      <label for="attachDoc">Attach Doc:</label>
+      <input type="file" id="attachDoc" accept="image/png, image/jpeg, application/pdf" name="attachDoc" style="background:#3e6a47" class="uploadFile" required /><br>
+      <span>Note: Upload Document having extension png, jpeg or pdf</span>
+      </form>
+    </div>
+    <div class="form-group">
+        <div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <button class="submit btn btn-primary" onclick="addPO()">Submit</button>
+</div>
+
+<!-- Add Item -->
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h5>Add PO Items</h5>
+      <div class="poFormTempSeletedItem" style="padding: 12px;margin-top: 10px;margin-left: 42px;font-weight: 700;background: #e0e0e0;">
+        <div>RC</div>
+        <div>Part No</div>
+        <div>Nomenclature</div>
+        <div>RFQ | Offer</div>
+        <div>Action</div>
+        </div>
+        <ol id="poItems">
+        </ol>
+        <input type="text" id="search" onkeyup="searchRfqOfferPartNo()" name="partNoSearch" placeholder="Enter Part No"/>
+        <div class="rfqOfferData">
+            <h5 style="text-align:center;background-color: #183A69;color: white;">RFQs</h5>
+            <h5 style="text-align:center;background-color: #89560a9e;color: white;">OFFERs</h5>
+              <div class="poItemOptions" style="height: 20px;font-size: 12px;padding-left: 10%;font-weight: 700;">
+              <div style="background: #183a69;color: white;">Part No</div>
+              <div style="background: #183a69;color: white;">Nomenclature</div>
+              <div style="background: #183a69;color: white;">RFQ</div>
+              <div style="background: #183a69;color: white;">Qty</div>
+              </div>
+              <div class="poItemOptions" style="height: 20px;font-size: 12px;padding-left: 7%;font-weight: 700;">
+                <div style="background: #183a69;color: white;">Part | In Lieus Part No</div>
+                <div style="background: #183a69;color: white;">Nomenclature</div>
+                <div style="background: #183a69;color: white;">RFQ | Offer</div>
+                <div style="background: #183a69;color: white;">Qty</div>
+              </div>
+            <div id="rfqs"></div>
+            <div id="offers"></div>
+        </div>
+        <button class="addSelectedPOItems" onclick="addSelectedPOItems()">ADD</button>
+    </div>
+  
+  </div>
+  
+<!-- PO Success -->
+<div class="container">
+  <!-- <a class="btn btn-primary" data-toggle="modal" href="#ignismyModal">open Popup</a> -->
+  <div class="modal fade" id="ignismyModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label=""><span>×</span></button> -->
+             </div>
+  
+            <div class="modal-body">
+               
+    <div class="thank-you-pop">
+      <img src="http://goactionstations.co.uk/wp-content/uploads/2017/03/Green-Round-Tick.png" alt="">
+      <h2>Congratulation!</h1>
+      <p>PO added successfully</p>
+      <h5 class="cupon-pop">Transactional Id: <span id="successti"></span></h5>
+      <!-- <h5 class="cupon-pop">Customer RFQ No: <span id="successCustomerRFQ"></span></h5> -->
+      <h5 class="cupon-pop">Total Amount: <span id="successAmount"></span></h5>
+      <a onclick="submitPODocument()">Continue...</a>
+     </div>           
+            </div>
+        </div>
+    </div>
+  </div>
+  </div>
+
+  <script>
+  // Get the modal
+  var modal = document.getElementById("myModal");
+  
+  // Get the button that opens the modal
+  var btn = document.getElementById("myBtn");
+  
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+  
+  // When the user clicks the button, open the modal 
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+  
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+  
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+  </script>
+</body>
+</html>

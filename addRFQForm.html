@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>RFQ Form</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="cssForms/forms.css" rel="stylesheet" type="text/css" />
+  <script src="index.js"></script>
+  <script>
+    function rfqTypeChange(){
+    if(document.getElementById("rfqType").value=="po"){
+      document.getElementById("quantity").innerHTML="Quantity";
+      return false
+    }
+    else{
+    document.getElementById("quantity").innerHTML="Serial No";
+    return false
+    }
+  }
+
+  </script>
+</head>
+<body onload="loadAddRFQForm()">
+  <div class="loader" id="loader"></div>
+<div class="formBody container" id="formBody">
+  <form action="#" enctype="multipart/form-data" onsubmit="return mySubmitFunction(event)">
+  <h4 class="heading">ADD RFQ FORM</h4>
+    <div class="form-group">
+      <label for="customer">Customer:</label>
+      <select name="customer" onchange="loadAddRFQForm()" class="dropDown" id="customer">
+        <option value="select" selected>Select</option>
+        <option value="PN">PN</option>
+        <option value="PAF">PAF</option>
+        <option value="DGPA">DGP</option>
+        <option value="CD">CD</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="rfqNo">Customer RFQ No:</label>
+      <input type="text" class="form-control" id="rfqNo" placeholder="Enter RFQ No" name="rfqNo" required>
+    </div>
+    <div class="form-group">
+      <label for="rfqCategory">RFQ Category</label>
+      <select id="rfqCategory" class="dropDown" name="rfqCategory">
+        <option value="select" selected>Select</option>
+        <option value="RFQ">RFQ</option>
+        <option value="IPL">IPL</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="rfqType">RFQ Type:</label>
+      <select id="rfqType" onchange="rfqTypeChange()" class="dropDown" name="rfqType">
+        <option value="select" selected>Select</option>
+        <option value="po">PO</option>
+        <option value="ro">RO</option>
+      </select>
+      <!-- <input type="text" style="display:none;" class="serialNo form-control" value="" id="serialNo" placeholder="Enter Serial No" name="serialNo"> -->
+   </div>
+    <div class="form-group">
+      <label for="reqDate">RFQ Date</label>
+      <input type="date" class="form-control" id="reqDate" placeholder="Enter RFQ Date" name="reqDate">
+    </div>
+    <div class="form-group">
+      <label for="deliveryDate">Due Date:</label>
+      <input type="date" class="form-control" id="deliveryDate" placeholder="Enter Delivery Date" name="deliveryDate">
+    </div>
+    <div class="form-group">
+      <label for="partNo">Attach Items:</label>
+      <input type="text" class="form-control" oninput="onInput()" id="searchItem" list="allItems" placeholder="Enter Item Name or Part No" name="searchItem">
+      <datalist id="allItems">
+      </datalist>
+      <div class="partNos" id="partNos">
+        <div><p>Part No</p></div>
+        <div><p id="Nomanclature">Nomenclature</p></div>
+        <div><p>NSN</p></div>
+        <div><p  id="quantity">Quantity</p></div>
+        <div><p>Remove</p></div>
+        <!-- <div><select id="pn1" ><option value="0">Select</select></select></div>
+        <div><input type="text" id="qty1" value="1" name="qty1" placeholder=""/></div>
+        <div><button onclick="addItemInRFQ()"><img src="images/plus-solid.svg"></button></div> -->
+      </div>
+      <input style="display:none;" type="text" class="form-control" id="partNo" placeholder="Enter Part No" name="partNo">
+      <input style="display:none;" type="text" class="form-control" id="nsn" placeholder="Enter NSN No" name="nsn">
+    </div>
+    <div class="form-group" style="display:none;">
+      <label for="qty" id="qtyHead">Quantity:</label>
+      <input type="text" class="form-control" id="qty" placeholder="Enter" name="qty">
+    </div>
+  </form>
+    <div class="form-group">
+      <form id="rfqDocForm" method="post" enctype="multipart/form-data">
+        <label for="attachDoc">Attach Doc:</label>
+        <input type="file" id="attachDoc" accept="image/png, image/jpeg, application/pdf" name="attachDoc" class="uploadFile" required /><br>
+        <span>Note: Upload Document having extension png, jpeg or pdf</span>
+      </form>
+    </div>
+    <a href="addItemForm.html"><button class="addItem" title="Add Item to Internation Price List">Add Item | IPL</button></a>
+    <!-- <button class="submit btn btn-primary" onclick="addRFQ()">Submit</button> -->
+    <input class="submit btn btn-primary" onclick="addRFQ()" value="SUBMIT">
+  </div>
+<div class="container">
+<!-- <a class="btn btn-primary" data-toggle="modal" href="#ignismyModal">open Popup</a> -->
+<div class="modal fade" id="ignismyModal" role="dialog">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <!-- <button type="button" class="close" data-dismiss="modal" aria-label=""><span>×</span></button> -->
+           </div>
+
+          <div class="modal-body">
+             
+  <div class="thank-you-pop">
+    <img src="http://goactionstations.co.uk/wp-content/uploads/2017/03/Green-Round-Tick.png" alt="">
+    <h2>Congratulation!</h1>
+    <p>RFQ successfully added to the system</p>
+    <h5 class="cupon-pop">Transactional Id: <span id="sgrfq"></span></h5>
+    <h5 class="cupon-pop">Customer RFQ No: <span id="customerRFQ"></span></h5>
+    <a onclick="submitRFQDocument()">Continue...</a>
+   </div>           
+          </div>
+      </div>
+  </div>
+</div>
+</div>
+<script>
+    $("#attachDoc").change(function(){
+         console.log(document.getElementById("attachDoc").value);
+         return false
+    });
+  function onInput() {
+    var val = document.getElementById("searchItem").value;
+    var opts = document.getElementById('allItems').childNodes;
+    for (var i = 0; i < opts.length; i++) {
+      if (opts[i].value === val) {
+        addItemInRFQ(opts[i].value);
+        // alert();
+        break;
+      }
+    }
+  }
+//   $("form").on('submit', function (e) {
+//    //ajax call here
+
+//    //stop form submission
+//    e.preventDefault();
+// });
+</script>
+</body>
+</html>

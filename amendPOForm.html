@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>PO Form</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="cssForms/forms.css" rel="stylesheet" type="text/css" />
+  <script src="index.js"></script>
+  <style>
+    .modal{
+        background: #80808070 !important;
+        overflow-y: scroll;
+    }
+    .modal-content{
+        top: 20%;
+        width: 80%;
+        margin: 0 auto;
+        padding: 16px;
+    }
+    .modal-content h5{
+        padding: 6px;
+        text-align: center;
+        background: #d1d2d3;
+        color: #556e5a;
+        margin-top: 12px;
+    }
+    ol{
+      margin-top: 6px;
+      margin-bottom: 1rem;
+      max-height: 156px;
+      overflow-y: scroll;
+      /* box-shadow: 0 0 28px #cdcdcd; */
+      border-radius: 4px;
+      border-style: groove;
+      background: #0f2f5691;
+    }
+    .formBody{
+      width: 60%;
+    }
+   </style>
+  </style>
+</head>
+<body style="background: #79a281b5" onload="loadAmendPOForm()">
+
+<div class="formBody container" id="formBody">
+  <h4 class="heading" style="background-color: #63896b">ADD PO FORM</h4>
+  <div class="form-group">
+    <label for="customer">Customer:</label>
+    <select onchange="loadPosForm()" name="customer" class="dropDown" id="customer">
+      <option value="select" selected>Select</option>
+      <option value="PN">PN</option>
+      <option value="PAF">PAF</option>
+      <option value="DGPA">DGP</option>
+      <option value="CD">CD</option>
+    </select>
+  </div>
+    <div class="form-group">
+      <label for="offerNo">Purchase Order No:</label>
+      <input type="text" class="form-control" id="no" placeholder="Enter PO No" name="no" required>
+    </div>
+    <div class="form-group">
+        <label for="offerNo">Purchase Order Date:</label>
+        <input type="date" class="form-control" id="date" placeholder="Enter PO Date" name="date" required>
+    </div>
+    <div class="form-group">
+      <label for="offerNo">Delivery Period:</label>
+      <input type="number" onkeyup="setDeliverDate()" class="form-control" id="days" placeholder="Enter Days" name="date" required>
+  </div>
+    <div class="form-group">
+        <label for="offerNo">Delivery Date:</label>
+        <input readonly type="date" class="form-control" id="delivery" placeholder="Enter Delivery Period" name="delivery Period" required>
+    </div>
+    <div class="form-group">
+        <label for="offerNo">PO Item:</label>
+        <!-- <input type="number" oninput="generateFields()" class="form-control" id="totalItem" placeholder="Enter Total Items" name="totalItem" required> -->
+        <button id="myBtn" class="addItemsButton">Add/Remove</button>
+    </div>
+    <div class="form-group">
+      <div class="addedPOItemsHeader addedPOItems">
+        <div><p>Part No</p></div>
+        <div><p>Nomenclature</p></div>
+        <div><p>Ref</p></div>
+        <div><p>Qty</p></div>
+        <div><p>Prices</p></div>
+        <div><p>Dis %</p></div>
+        <div><p>Fght %</p></div>
+        <div><p>Total</p></div>
+  </div>
+      <div class="addedPOItems" id="addedPOItems">
+      </div>
+    </div>
+    <div class="form-group">
+        <div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="form-group">
+      <form id="poDocForm" method="post" enctype="multipart/form-data">
+      <label for="attachDoc">Attach Doc:</label>
+      <input type="file" id="attachDoc" accept="image/png, image/jpeg, application/pdf" name="attachDoc" style="background:#3e6a47" class="uploadFile" required /><br>
+      <span>Note: Upload Document having extension png, jpeg or pdf</span>
+      </form>
+    </div>
+    <button class="submit btn btn-primary" onclick="amendPO()">Submit</button>
+</div>
+
+<!-- Add Item -->
+<div id="myModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h5>Add PO Items</h5>
+    <div class="poFormTempSeletedItem" style="padding: 12px;margin-top: 10px;margin-left: 42px;font-weight: 700;background: #e0e0e0;">
+      <div>RC</div>
+      <div>Part No</div>
+      <div>Nomenclature</div>
+      <div>RFQ | Offer</div>
+      <div>Action</div>
+      </div>
+      <ol id="poItems">
+      </ol>
+      <input type="text" id="search" onkeyup="searchRfqOfferPartNo()" name="partNoSearch" placeholder="Enter Part No"/>
+      <div class="rfqOfferData">
+          <h5 style="text-align:center;background-color: #183A69;color: white;">RFQs</h5>
+          <h5 style="text-align:center;background-color: #89560a9e;color: white;">OFFERs</h5>
+            <div class="poItemOptions" style="height: 20px;font-size: 12px;padding-left: 10%;font-weight: 700;">
+            <div style="background: #183a69;color: white;">Part No</div>
+            <div style="background: #183a69;color: white;">Nomenclature</div>
+            <div style="background: #183a69;color: white;">RFQ</div>
+            <div style="background: #183a69;color: white;">Qty</div>
+            </div>
+            <div class="poItemOptions" style="height: 20px;font-size: 12px;padding-left: 7%;font-weight: 700;">
+              <div style="background: #183a69;color: white;">Part | In Lieus Part No</div>
+              <div style="background: #183a69;color: white;">Nomenclature</div>
+              <div style="background: #183a69;color: white;">RFQ | Offer</div>
+              <div style="background: #183a69;color: white;">Qty</div>
+            </div>
+          <div id="rfqs"></div>
+          <div id="offers"></div>
+      </div>
+      <button class="addSelectedPOItems" onclick="addSelectedPOItems()">ADD</button>
+  </div>
+
+</div>
+
+<!-- PO Success -->
+<div class="container">
+<!-- <a class="btn btn-primary" data-toggle="modal" href="#ignismyModal">open Popup</a> -->
+<div class="modal fade" id="ignismyModal" role="dialog">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <!-- <button type="button" class="close" data-dismiss="modal" aria-label=""><span>×</span></button> -->
+           </div>
+
+          <div class="modal-body">
+             
+  <div class="thank-you-pop">
+    <img src="http://goactionstations.co.uk/wp-content/uploads/2017/03/Green-Round-Tick.png" alt="">
+    <h2>Congratulation!</h1>
+    <p>PO Amended successfully</p>
+    <h5 class="cupon-pop">Transactional Id: <span id="successti"></span></h5>
+    <!-- <h5 class="cupon-pop">Customer RFQ No: <span id="successCustomerRFQ"></span></h5> -->
+    <h5 class="cupon-pop">Total Amount: <span id="successAmount"></span></h5>
+    <a onclick="submitPODocument()">Continue...</a>
+   </div>           
+          </div>
+      </div>
+  </div>
+</div>
+</div>
+
+
+<script>
+  // Get the modal
+  var modal = document.getElementById("myModal");
+  
+  // Get the button that opens the modal
+  var btn = document.getElementById("myBtn");
+  
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+  
+  // When the user clicks the button, open the modal 
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+  
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+  
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+  </script>
+</body>
+</html>

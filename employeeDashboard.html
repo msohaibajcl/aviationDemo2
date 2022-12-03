@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="en">
+
+    
+<!-- Mirrored from dashonic.django.pichforest.com/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Nov 2022 11:48:07 GMT -->
+<head>
+
+        <meta charset="utf-8" />
+        <title>Sales Dashboard | Dashonic - Admin & Dashboard Template</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+        <meta content="Pichforest" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="images/ajclLogo.svg">
+
+        <!-- plugin css -->
+        <!-- <link href="assetsEmployeeDashboard/" rel="stylesheet" type="text/css" /> -->
+
+        <!-- Bootstrap Css -->
+        <link href="assetsEmployeeDashboard/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="assetsEmployeeDashboard/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <!-- App Css-->
+        <link href="assetsEmployeeDashboard/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <style>
+            .dropdown{
+                display: none;
+            }
+            .noti-icon .noti-dot{
+                display: none;
+            }
+            .username{
+                display: block;
+                background: #0A1E77;
+                padding: 15px;
+                margin-top: 40%;
+                color: white;
+                border-radius: 15px;
+                font-family: system-ui;
+            }
+            .d-flex button{
+                margin: 10px;
+                border-radius: 6px;
+                background: none;
+                border: none;
+                box-shadow: 0 0 4px #0a1e77;
+                padding-left: 20px;
+                padding-right: 20px;
+                border-bottom: 5px solid #0a1e77;
+            }
+            .menubar{}
+            .menubar:hover{
+                    background:#0E1A77;
+                    color:white;
+                }
+            /* @media only screen and (max-width: 1750px) {
+                .menubar{
+                    display: block;
+                    width: 100%;
+                    background: #A9C23F;
+                    border-color: #f7f8fa;
+                    padding: 5px;
+                    font-weight: 700;
+                }
+            } */
+            .active{
+                background:#0E1A77 !important;
+                color:white;
+            }
+            .total{margin-top: 30px;font-weight: 600;font-family: monospace;}
+            .pending{margin-top: 5px;font-weight: 600;font-family: monospace;}
+            .partiallyCompleted{margin-top: 5px;font-weight: 600;font-family: monospace;}
+            .completed{margin-top: 5px;font-weight: 600;font-family: monospace;}
+            #progress{background: #ddd;width: 100%;}
+            #progressBar{background-color: #0E1A77;height: 10px;line-height: 10px;width: 50%;}
+            .dashboardFilter{
+                font-weight: 700;
+                padding: 0px 10px;
+                border-radius: 5px;
+                background: #dddddd;
+                cursor: pointer;
+            }
+            .customerLogo{
+                height: 60px;
+                padding: 0px 10px;
+            }
+        </style>
+    </head>
+    <body onload="dashboard()">
+
+    <!-- <body data-layout="horizontal"> -->
+
+    <!-- Begin page -->
+    <div id="layout-wrapper">
+
+        
+        <header id="page-topbar">
+            <div class="navbar-header">
+                <div class="d-flex" id="menubar">
+                    <!-- LOGO -->
+                    <button class="menubar active">Dashboard</button>
+                    <a href="RFQs.html"><button class="menubar">RFQs/Offers</button></a>
+                    <a href="pos.html"><button class="menubar">POs/Order Confirmations</button></a>
+                    <a href="shipment.html"><button class="menubar">Shipment/Payments</button></a>
+                    <button class="menubar">AJCL Invoices</button>
+                    <button class="menubar">Task Tracking</button>
+                    <button class="menubar">Reports</button>
+                    <button onclick="signOut()" class="menubar">Logout</button>
+                </div>
+
+                <div class="d-flex" style="display:block !important;">
+                    <div class="dropdown d-inline-block language-switch">
+                        <h4 id="department" style="padding-bottom: 30%;margin-right: 6px;"></h4>
+                        <div class="dropdown-menu dropdown-menu-end">
+                    
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="eng">
+                                <img src="assets/images/flags/us.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">English</span>
+                            </a>
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="sp">
+                                <img src="assets/images/flags/spain.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Spanish</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="gr">
+                                <img src="assets/images/flags/germany.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">German</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="it">
+                                <img src="assets/images/flags/italy.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Italian</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="ru">
+                                <img src="assets/images/flags/russia.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Russian</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+
+                    
+
+                    <div class="dropdown d-inline-block" style="background:#0A1E77">
+                        <!-- <button type="button" class="btn header-item user text-start d-flex align-items-center" id="page-header-user-dropdown"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> -->
+                            <!-- <img class="rounded-circle header-profile-user" src="assets/images/users/avatar-1.jpg"
+                            alt="Header Avatar"> -->
+                            <!-- <span class="ms-2 d-none d-sm-block user-item-desc">
+                                <span class="user-name" id="user-name"></span>
+                                <span class="user-sub-title">Administrator</span>
+                            </span> -->
+                            <h6 class="username" id="user-name"></h6>
+                        <!-- </button> -->
+                        <div class="dropdown-menu dropdown-menu-end pt-0">
+                            <div class="p-3 bg-primary border-bottom">
+                                <h6 class="mb-0 text-white"></h6>
+                                <p class="mb-0 font-size-11 text-white-50 fw-semibold"></p>
+                            </div>
+                            <a class="dropdown-item" href="pages-profile.html"><i class="mdi mdi-account-circle text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Profile</span></a>
+                            <a class="dropdown-item" href="apps-chat.html"><i class="mdi mdi-message-text-outline text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Messages</span></a>
+                            <a class="dropdown-item" href="apps-kanban-board.html"><i class="mdi mdi-calendar-check-outline text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Taskboard</span></a>
+                            <a class="dropdown-item" href="pages-faqs.html"><i class="mdi mdi-lifebuoy text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Help</span></a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="pages-profile.html"><i class="mdi mdi-wallet text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Balance : <b></b></span></a>
+                            <a class="dropdown-item d-flex align-items-center" href="user-settings.html"><i class="mdi mdi-cog-outline text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Settings</span><span class="badge badge-soft-success ms-auto">New</span></a>
+                            <a class="dropdown-item" href="auth-lockscreen-basic.html"><i class="mdi mdi-lock text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Lock screen</span></a>
+                            <a class="dropdown-item" href="auth-signout-basic.html"><i class="mdi mdi-logout text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Logout</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- ========== Left Sidebar Start ========== -->
+
+        <div id="menubarResponsive"></div>
+
+        <!-- <div class="vertical-menu"> -->
+
+            <!-- LOGO -->
+            <div data-simplebar class="sidebar-menu-scroll">
+        <!-- ============================================================== -->
+        <!-- Start right Content here -->
+        <!-- ============================================================== -->
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box d-flex align-items-center justify-content-between">
+                                <h4 class="mb-0">Business Analytics</h4>
+                                <div id="customer"><img class='customerLogo' src='images/pakArmy.png'><img class='customerLogo' src='images/pakNavy.png'><img class='customerLogo' src='images/pakCD.png'></div>
+                                <select id="dashboardFilter" onchange="dashboardFilter()" class="dashboardFilter">
+                                    <option value="all">All
+                                    </option>
+                                    <option value="pakArmy">PAK ARMY 
+                                    </option>
+                                    <option value="pakNavy">PAK NAVY
+                                    </option>
+                                    <option value="dgp">DGP
+                                    </option>
+                                    <option value="cd">CD
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+
+                    <div class="row">
+                        <div class="col-xl-4 col-sm-9">
+                            <!-- Card -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div>
+                                        <div>
+                                            <h6 class="font-size-xs text-uppercase">RFQ</h6>
+                                            <!-- <h4 class="mt-4 font-weight-bold mb-2 d-flex align-items-center">
+                                                
+                                            </h4> -->
+                                            <div id="progress">
+                                                <div id="progressBar"></div>
+                                                <p style="float:left;color: lightgray;font-size:10px">0%</p>
+                                                <p style="float: right;color: lightgray;font-size:10px">100%</p>
+                                            </div>
+                                            <ul>
+                                                <li class="total">Total RFQs: 0
+                                                    <ul>
+                                                        <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                    </ul>
+                                                </li>
+                                                <li class="pending">Pending: 0
+                                                    <ul>
+                                                        <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                    </ul>
+                                                </li>
+                                                <li class="partiallyCompleted">Partially Completed: 0
+                                                    <ul>
+                                                        <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                    </ul>
+                                                </li>
+                                                <li class="completed">Completed: 0
+                                                    <ul>
+                                                        <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                            <div class="text-muted">Request for Quotation</div>
+                                        </div>
+                                    </div>
+                                    <div class="apex-charts mt-3" id="sparkline-chart-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-9">
+                            <!-- Card -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div>
+                                        <div>
+                                            <h6 class="font-size-xs text-uppercase">OFFERS</h6>
+                                            <div id="progress">
+                                                <div id="progressBar"></div>
+                                                <p style="float:left;color: lightgray;font-size:10px">0%</p>
+                                                <p style="float: right;color: lightgray;font-size:10px">100%</p>
+                                            </div>
+                                            <!-- <h4 class="mt-4 font-weight-bold mb-2 d-flex align-items-center"> -->
+                                                <ul>
+                                                    <li class="total">Total Offers: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="pending">Pending: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="partiallyCompleted">Partially Completed: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="completed">Completed: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            <!-- </h4> -->
+                                            <div class="text-muted">Offers on Items</div>
+                                        </div>
+                                    </div>
+                                    <div class="apex-charts mt-3" id="sparkline-chart-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-9">
+                            <!-- Card -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div>
+                                        <div>
+                                        <h6 class="font-size-xs text-uppercase">PO</h6>
+                                            <div id="progress">
+                                                <div id="progressBar"></div>
+                                                <p style="float:left;color: lightgray;font-size:10px">0%</p>
+                                                <p style="float: right;color: lightgray;font-size:10px">100%</p>
+                                            </div>
+                                            <!-- <h4 class="mt-4 font-weight-bold mb-2 d-flex align-items-center"> -->
+                                                <ul>
+                                                    <li class="total">Total POs: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="pending">Pending: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="partiallyCompleted">Partially Completed: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="completed">Completed: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            <!-- </h4> -->
+                                            <div class="text-muted">Purchase Order</div>
+                                        </div>
+                                    </div>
+                                    <div class="apex-charts mt-3" id="sparkline-chart-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-9">
+                            <!-- Card -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div>
+                                        <div>
+                                            <h6 class="font-size-xs text-uppercase">OC</h6>
+                                            <div id="progress">
+                                                <div id="progressBar"></div>
+                                                <p style="float:left;color: lightgray;font-size:10px">0%</p>
+                                                <p style="float: right;color: lightgray;font-size:10px">100%</p>
+                                            </div>
+                                            <!-- <h4 class="mt-4 font-weight-bold mb-2 d-flex align-items-center"> -->
+                                                <ul>
+                                                    <li class="total">Total OCs: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="pending">Pending: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="partiallyCompleted">Partially Completed: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="completed">Completed: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            <!-- </h4> -->
+                                            <div class="text-muted">Order Confirmations</div>
+                                        </div>
+                                    </div>
+                                    <div class="apex-charts mt-3" id="sparkline-chart-4"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-9">
+                            <!-- Card -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div>
+                                        <div>
+                                            <h6 class="font-size-xs text-uppercase">SHIPMENTS</h6>
+                                            <div id="progress">
+                                                <div id="progressBar"></div>
+                                                <p style="float:left;color: lightgray;font-size:10px">0%</p>
+                                                <p style="float: right;color: lightgray;font-size:10px">100%</p>
+                                            </div>
+                                            <!-- <h4 class="mt-4 font-weight-bold mb-2 d-flex align-items-center"> -->
+                                                <ul>
+                                                    <li class="total">Total Shipments: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="pending">Pending: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="partiallyCompleted">Partially Completed: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="completed">Completed: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            <!-- </h4> -->
+                                            <div class="text-muted">Order Shipments</div>
+                                        </div>
+                                    </div>
+                                    <div class="apex-charts mt-3" id="sparkline-chart-4"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-9">
+                            <!-- Card -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div>
+                                        <div>
+                                            <h6 class="font-size-xs text-uppercase">PAYMENTS</h6>
+                                            <div id="progress">
+                                                <div id="progressBar"></div>
+                                                <p style="float:left;color: lightgray;font-size:10px">0%</p>
+                                                <p style="float: right;color: lightgray;font-size:10px">100%</p>
+                                            </div>
+                                            <!-- <h4 class="mt-4 font-weight-bold mb-2 d-flex align-items-center"> -->
+                                                <ul>
+                                                    <li class="total">Total Payments: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="pending">Pending: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="partiallyCompleted">Partially Completed: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="completed">Completed: 0
+                                                        <ul>
+                                                            <li style="font-size:12px;color: #0e1a77;">Amount: 0.00$</li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            <!-- </h4> -->
+                                            <div class="text-muted">Order Payments</div>
+                                        </div>
+                                    </div>
+                                    <div class="apex-charts mt-3" id="sparkline-chart-4"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- end row-->
+                    <div class="row">
+                        <div class="col-xl-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h4 class="card-title mb-4">Records</h4>
+                                        <div>
+                                            <div class="dropdown d-inline">
+                                                <span class="text-muted">Tasks History</span> 
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-nowrap mb-0 align-middle table-check">
+                                            <thead class="bg-light">
+                                                <tr>
+                                                    <th class="rounded-start" style="width: 15px;">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input font-size-16" type="checkbox"
+                                                                value="" id="checkAll">
+                                                            <label class="form-check-label" for="checkAll"> </label>
+                                                        </div>
+                                                    </th>
+                                                    <th>Date</th>
+                                                    <th>Time</th>
+                                                    <th>Activity</th>
+                                                    <th>Action Id</th>
+                                                    <th>Task</th>
+                                                </tr>
+                                                <!-- end tr -->
+                                            </thead>
+                                            <!-- end thead -->
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input font-size-16" type="checkbox"
+                                                                value="" id="flexCheckexampleone">
+                                                            <label class="form-check-label" for="flexCheckexampleone">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        01/11/2022
+                                                    </td>
+                                                    <td class="fw-medium">
+                                                        5:15
+                                                    </td>
+                                                    <td>
+                                                        RFQ
+                                                    </td>
+                                                    <td>
+                                                       111111 
+                                                    </td>
+                                                    <td>
+                                                        Generate RFQ 111111
+                                                    </td>
+
+                                                </tr>
+                                                <!-- end /tr -->
+
+                                            </tbody><!-- end tbody -->
+                                        </table><!-- end table -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between" style="display:block !important;">
+                                        <h2 class="card-title mb-4">Profile</h2><br>
+                                        <h6 id="name"></h6><br>
+                                        <h6 id="email"></h6><br>
+                                        <h6 id="post"></h6><br>
+                                        <h6 id="profileDepartment"></h6><br>
+                                        <h6 id="age"></h6><br>
+                                        <h6 id="loc"></h6><br>
+                                        <button style="background:#0a1e77;color:white;">Edit Profile <img src="images/pen-solid.svg" height="14px" style="padding-left: 5px;"></button>
+                                    </div>
+
+                                    <!-- <div id="world-map-markers" style="height: 242px;"></div> -->
+
+                                    <!-- <div class="pt-3 px-2 pb-2">
+                                        <p class="mb-1 fw-medium">USA <span class="float-end">75%</span></p>
+                                        <div class="progress animated-progess custom-progress mt-2">
+                                            <div class="progress-bar" role="progressbar"
+                                                style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="75">
+                                            </div>
+                                        </div>
+
+                                        <p class="mt-4 mb-1 fw-medium">Russia <span class="float-end">55%</span></p>
+                                        <div class="progress animated-progess custom-progress mt-2">
+                                            <div class="progress-bar" role="progressbar"
+                                                style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="55">
+                                            </div>
+                                        </div>
+
+                                        <p class="mt-4 mb-1 fw-medium">Australia <span class="float-end">85%</span></p>
+                                        <div class="progress animated-progess custom-progress mt-2">
+                                            <div class="progress-bar" role="progressbar"
+                                                style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="85">
+                                            </div>
+                                        </div>
+                                    </div> -->
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end row -->
+
+                </div>
+                <!-- container-fluid -->
+            </div>
+            <!-- End Page-content -->
+
+            <!-- <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <script>document.write(new Date().getFullYear())</script> &copy; Dashonic.
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="text-sm-end d-none d-sm-block">
+                                Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://pichforest.com/" target="_blank" class="text-reset">Pichforest</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer> -->
+        </div>
+        <!-- end main content-->
+
+    </div>
+    <!-- END layout-wrapper -->
+
+    <!-- Right Sidebar -->
+    <div class="right-bar">
+        <div data-simplebar class="h-100">
+            <div class="rightbar-title d-flex align-items-center bg-dark p-3">
+
+                <h5 class="m-0 me-2 text-white">Theme Customizer</h5>
+
+                <a href="javascript:void(0);" class="right-bar-toggle-close ms-auto">
+                    <i class="mdi mdi-close noti-icon"></i>
+                </a>
+            </div>
+
+            <!-- Settings -->
+            <hr class="m-0" />
+
+            <div class="p-4">
+                <h6 class="mb-3">Layout</h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="layout"
+                        id="layout-vertical" value="vertical">
+                    <label class="form-check-label" for="layout-vertical">Vertical</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="layout"
+                        id="layout-horizontal" value="horizontal">
+                    <label class="form-check-label" for="layout-horizontal">Horizontal</label>
+                </div>
+
+                <h6 class="mt-4 mb-3">Layout Mode</h6>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="layout-mode"
+                        id="layout-mode-light" value="light">
+                    <label class="form-check-label" for="layout-mode-light">Light</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="layout-mode"
+                        id="layout-mode-dark" value="dark">
+                    <label class="form-check-label" for="layout-mode-dark">Dark</label>
+                </div>
+
+                <h6 class="mt-4 mb-3">Layout Width</h6>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="layout-width"
+                        id="layout-width-fluid" value="fluid" onchange="document.body.setAttribute('data-layout-size', 'fluid')">
+                    <label class="form-check-label" for="layout-width-fluid">Fluid</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="layout-width"
+                        id="layout-width-boxed" value="boxed" onchange="document.body.setAttribute('data-layout-size', 'boxed')">
+                    <label class="form-check-label" for="layout-width-boxed">Boxed</label>
+                </div>
+
+                <h6 class="mt-4 mb-3">Layout Position</h6>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="layout-position"
+                        id="layout-position-fixed" value="fixed" onchange="document.body.setAttribute('data-layout-scrollable', 'false')">
+                    <label class="form-check-label" for="layout-position-fixed">Fixed</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="layout-position"
+                        id="layout-position-scrollable" value="scrollable" onchange="document.body.setAttribute('data-layout-scrollable', 'true')">
+                    <label class="form-check-label" for="layout-position-scrollable">Scrollable</label>
+                </div>
+
+                <h6 class="mt-4 mb-3">Topbar Color</h6>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="topbar-color"
+                        id="topbar-color-light" value="light" onchange="document.body.setAttribute('data-topbar', 'light')">
+                    <label class="form-check-label" for="topbar-color-light">Light</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="topbar-color"
+                        id="topbar-color-dark" value="dark" onchange="document.body.setAttribute('data-topbar', 'dark')">
+                    <label class="form-check-label" for="topbar-color-dark">Dark</label>
+                </div>
+
+                <div id="sidebar-setting">
+                <h6 class="mt-4 mb-3 sidebar-setting">Sidebar Size</h6>
+
+                <div class="form-check sidebar-setting">
+                    <input class="form-check-input" type="radio" name="sidebar-size"
+                        id="sidebar-size-default" value="default" onchange="document.body.setAttribute('data-sidebar-size', 'lg')">
+                    <label class="form-check-label" for="sidebar-size-default">Default</label>
+                </div>
+                <div class="form-check sidebar-setting">
+                    <input class="form-check-input" type="radio" name="sidebar-size"
+                        id="sidebar-size-compact" value="compact" onchange="document.body.setAttribute('data-sidebar-size', 'md')">
+                    <label class="form-check-label" for="sidebar-size-compact">Compact</label>
+                </div>
+                <div class="form-check sidebar-setting">
+                    <input class="form-check-input" type="radio" name="sidebar-size"
+                        id="sidebar-size-small" value="small" onchange="document.body.setAttribute('data-sidebar-size', 'sm')">
+                    <label class="form-check-label" for="sidebar-size-small">Small (Icon View)</label>
+                </div>
+
+                <h6 class="mt-4 mb-3 sidebar-setting">Sidebar Color</h6>
+
+                <div class="form-check sidebar-setting">
+                    <input class="form-check-input" type="radio" name="sidebar-color"
+                        id="sidebar-color-light" value="light" onchange="document.body.setAttribute('data-sidebar', 'light')">
+                    <label class="form-check-label" for="sidebar-color-light">Light</label>
+                </div>
+                <div class="form-check sidebar-setting">
+                    <input class="form-check-input" type="radio" name="sidebar-color"
+                        id="sidebar-color-dark" value="dark" onchange="document.body.setAttribute('data-sidebar', 'dark')">
+                    <label class="form-check-label" for="sidebar-color-dark">Dark</label>
+                </div>
+                <div class="form-check sidebar-setting">
+                    <input class="form-check-input" type="radio" name="sidebar-color"
+                        id="sidebar-color-brand" value="brand" onchange="document.body.setAttribute('data-sidebar', 'brand')">
+                    <label class="form-check-label" for="sidebar-color-brand">Brand</label>
+                </div>
+            </div>
+
+                <h6 class="mt-4 mb-3">Direction</h6>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="layout-direction"
+                        id="layout-direction-ltr" value="ltr">
+                    <label class="form-check-label" for="layout-direction-ltr">LTR</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="layout-direction"
+                        id="layout-direction-rtl" value="rtl">
+                    <label class="form-check-label" for="layout-direction-rtl">RTL</label>
+                </div>
+
+            </div>
+
+        </div> <!-- end slimscroll-menu-->
+    </div>
+    <!-- /Right-bar -->
+
+    <!-- Right bar overlay-->
+    <div class="rightbar-overlay"></div>
+
+    <!-- JAVASCRIPT -->
+    <script src="index.js"></script>
+    <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/libs/metismenujs/metismenujs.min.js"></script>
+    <script src="assets/libs/simplebar/simplebar.min.js"></script>
+    <script src="assets/libs/feather-icons/feather.min.js"></script>
+
+    <!-- apexcharts -->
+    <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+
+    <!-- Vector map-->
+    <script src="assets/libs/jsvectormap/js/jsvectormap.min.js"></script>
+    <script src="assets/libs/jsvectormap/maps/world-merc.js"></script>
+    <script src="assets/js/pages/dashboard-sales.init.js"></script>
+    <script src="assets/js/app.js"></script>
+
+    </body>
+<!-- Mirrored from dashonic.django.pichforest.com/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Nov 2022 11:48:41 GMT -->
+</html>

@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+
+    
+<!-- Mirrored from dashonic.django.pichforest.com/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Nov 2022 11:48:07 GMT -->
+<head>
+
+        <meta charset="utf-8" />
+        <title>Dashboard | AJCL</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+        <meta content="Pichforest" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="images/ajclLogo.svg">
+
+        <!-- plugin css -->
+        <link href="assetsEmployeeDashboard/" rel="stylesheet" type="text/css" />
+
+        <!-- Bootstrap Css -->
+        <link href="assetsEmployeeDashboard/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="assetsEmployeeDashboard/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <!-- App Css-->
+        <link href="assetsEmployeeDashboard/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link href="cssRFQs/style.css" rel="stylesheet" type="text/css" />
+        <style>
+            .dropdown{
+                display: none;
+            }
+            .noti-icon .noti-dot{
+                display: none;
+            }
+            .username{
+                display: block;
+                background: #0A1E77;
+                padding: 15px;
+                margin-top: 40%;
+                color: white;
+                border-radius: 15px;
+                font-family: system-ui;
+            }
+            .d-flex button{
+                margin: 10px;
+                border-radius: 6px;
+                background: none;
+                border: none;
+                box-shadow: 0 0 4px #0a1e77;
+                padding-left: 20px;
+                padding-right: 20px;
+                border-bottom: 5px solid #0a1e77;
+            }
+            .menubar{}
+            .menubar:hover{
+                    background:#0E1A77;
+                    color:white;
+                }
+            @media only screen and (max-width: 750px) {
+                .menubar{
+                    display: block;
+                    width: 100%;
+                    background: #A9C23F;
+                    border-color: #f7f8fa;
+                    padding: 5px;
+                    font-weight: 700;
+                }
+                .offerDetails{
+                    grid-template-columns: repeat(4,100px);
+                }
+                .offerDetailsSection{
+                    width: 100px;
+                    overflow-x: scroll;
+                }
+            }
+            .active{
+                background:#0E1A77 !important;
+                color:white;
+            }
+            .total{margin-top: 30px;font-weight: 600;font-family: monospace;}
+            .pending{margin-top: 5px;font-weight: 600;font-family: monospace;}
+            .partiallyCompleted{margin-top: 5px;font-weight: 600;font-family: monospace;}
+            .completed{margin-top: 5px;font-weight: 600;font-family: monospace;}
+            #progress{background: #ddd;width: 100%;}
+            #progressBar{background-color: #0E1A77;height: 10px;line-height: 10px;width: 50%;}
+            .dashboardFilter{
+                font-weight: 700;
+                padding: 0px 10px;
+                border-radius: 5px;
+                background: #dddddd;
+                cursor: pointer;
+            }
+            .customerLogo{
+                height: 60px;
+                padding: 0px 10px;
+            }
+            .modal-dialog{
+                margin-top: 80px;
+            }
+        </style>
+    </head>
+    <body onload="RFQs()">
+
+    <!-- <body data-layout="horizontal"> -->
+    <div id="body">
+    <!-- Begin page -->
+    <div id="layout-wrapper">
+
+        
+        <header id="page-topbar">
+            <div class="navbar-header">
+                <div class="d-flex" id="menubar">
+                    <!-- LOGO -->
+                    <a href="employeeDashboard.html"><button class="menubar">Dashboard</button></a>
+                    <a href=""><button class="menubar active">RFQs/Offers</button></a>
+                    <a href="pos.html"><button class="menubar">POs/Order Confirmations</button></a>
+                    <a href="shipment.html"><button class="menubar">Shipment/Payments</button></a>
+                    <button class="menubar">AJCL Invoices</button>
+                    <button class="menubar">Task Tracking</button>
+                    <button class="menubar">Reports</button>
+                    <button onclick="signOut()" class="menubar">Logout</button>
+                </div>
+                <div class="d-flex" style="display:block !important;">
+                    <div class="dropdown d-inline-block language-switch">
+                        <h4 id="department" style="padding-bottom: 30%;margin-right: 6px;"></h4>
+                        <div class="dropdown-menu dropdown-menu-end">
+                    
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="eng">
+                                <img src="assets/images/flags/us.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">English</span>
+                            </a>
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="sp">
+                                <img src="assets/images/flags/spain.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Spanish</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="gr">
+                                <img src="assets/images/flags/germany.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">German</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="it">
+                                <img src="assets/images/flags/italy.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Italian</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="ru">
+                                <img src="assets/images/flags/russia.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Russian</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="dropdown d-inline-block" style="background:#0A1E77">
+                            <h6 class="username" id="user-name"></h6>
+                    </div>
+                </div>
+            </div>
+        </header></div>
+
+    <div id="menubarResponsive"></div>
+    <div class="customer" id="customer"></div>
+
+    <!-- Search Bar -->
+        <input oninput="searchRFQ()" id="search" class="search" type="text" placeholder="Search">
+        <select class="searchFilter">
+            <option disabled>filter</option>
+            <option>All</option>
+            <option>RFQ Id</option>
+            <option>Nomanclature</option>
+            <option>Part No</option>
+            <option>Company</option>
+            <option>Status</option>
+        </select>
+        <div>
+                <a href="addRFQForm.html"><button class="add" id="create" onchange="goTo()">Create RFQ</button></a>
+            <!-- <select class="add" id="create" onchange="goTo()">
+                <option value="create" selected>Create <img src="images/plus-solid.svg" height="20px"></option>
+                <option value="rfq" style="background:#A5BF3D;cursor:pointer;">RFQ</option> -->
+                <!-- <option value="offer" style="background:#183a6950 !important;cursor: pointer;">OFFER</option> -->
+            <!-- </select> -->
+        </div>
+    <!-- RFQs -->
+    <br><br>
+    <div class="rfqs" id="rfqs">
+        <!-- <div class="rfq">
+            <div class="company">
+                <h5>Company</h5>
+            </div>
+            <div class="rfqTableSection">
+                <table class="rfqTable">
+                    <tr style="display:none;">
+                        <th>111</th>
+                        <th>222</th>
+                        <th>333</th>
+                        <th>444</th>
+                        <th>555</th>
+                        <th>666</th>
+                        <th>777</th>
+                        <th>888</th>
+                        <th>999</th>
+                        <th>101</th>
+                        <th>102</th>
+                    </tr>
+                    <tr>
+                        <td>111</td>
+                        <td>222</td>
+                        <td>333</td>
+                        <td>444</td>
+                        <td>555</td>
+                        <td>666</td>
+                        <td>777</td>
+                        <td>888</td>
+                        <td>999</td>
+                        <td>101</td>
+                        <td>102</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="offersTableSection">
+                <table class="offersTable">
+                    <tr style="background:#183A69;color:white;font-weight:700;">
+                        <th rowspan="2">Part No</th>
+                        <th rowspan="2">Nomenclature</th>
+                        <th>Offers</th>
+                        <th rowspan="2">Status</th>
+                    </tr>
+                    <tr class="offersRow">
+                        <td>
+                            <div class="offerDetailsSection">
+                                <div class="offerDetails">
+                                    <div>Id</div>
+                                    <div>A/U</div>
+                                    <div>Qty</div>
+                                    <div>Price</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="offerDetailsRow">
+                        <td>11112</td>
+                        <td>2222</td>
+                        <td>
+                            <div class="offerDetailsSection">
+                                <div class="offerDetails">
+                                    <div>111</div>
+                                    <div>CM</div>
+                                    <div>5</div>
+                                    <div>$999</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>SSS</td>
+                    </tr>
+                    <tr class="offerDetailsRow">
+                        <td>3333</td>
+                        <td>4444</td>
+                        <td>
+                            <button>Enter Offer</button>
+                        </td>
+                        <td>SSS</td>
+                    </tr>     
+                </table>
+            </div>
+            <div class="remarkSection">
+                <button class="remarks">Remarks</button>
+                <button class="requestStatus">Partially Received</button>
+            </div>
+        </div> -->
+    </div>
+    </div>
+    <!-- Offer Modal -->
+    <div class="container">
+        <!-- <a class="btn btn-primary" data-toggle="modal" href="#ignismyModal">open Popup</a> -->
+        <div class="modal fade" id="offerModal" role="dialog">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header" id="offerDetailHeader">
+                    <button type="button" class="offerDetailClose close" data-dismiss="modal" onclick="disableOfferDetailModal()" aria-label=""><span>×</span></button>
+                   </div>
+                  <div class="modal-body" style="background: #f1f3f4;">
+            <h2 class="offerDetailHead">Item Offer Enquiry Screen</h2>
+            <div class="offerDetailDiv">
+            <!-- <p>RFQ successfully added to the system</p> -->
+            <div class="cupon-pop">Offer Number: </div><div id="offerNumber"></div>
+            <div class="cupon-pop">Part No: </div><div id="partNo"></div>
+            <div class="cupon-pop">RFQ Number: </div><div id="rfqNumber"></div>
+            <div class="cupon-pop">Date: </div><div id="date"></div>
+            <div class="cupon-pop">Delivery Date as Per LHD: </div><div id="deliveryDateAsPerLHDOffer"></div>
+            <div class="cupon-pop">validity: </div><div id="validity"></div>
+            <div class="cupon-pop">Alternate: </div><div id="alternate"></div>
+            <div class="cupon-pop">Quantity: </div><div id="quantity"></div>
+            <div class="cupon-pop">Unit of Measure: </div><div id="unitOfMeasure"></div>
+            <div class="cupon-pop">Unit Price: </div><div id="price"></div>
+            <div class="cupon-pop">Total Amount: </div><div id="totalAmount"></div>
+            <div class="cupon-pop">Discount:</div><div id="discount"></div>
+            <div class="cupon-pop">Discount Percentage: </div><div id="discountPercentage"></div>
+            <div class="cupon-pop">Offer Frieght Charges: </div><div id="offerFrieghtChargers"></div>
+            <div class="cupon-pop">Offer Frieght Charges Percentage: </div><div id="offerFrieghtChargersPercentage"></div>
+            <div class="cupon-pop">Offer Final Price: </div><div id="offerFinalPrice"></div>
+            <div class="cupon-pop">Offer Unit Price with Freight: </div><div id="offerUnitPriceWithFreight"></div>
+            <div class="cupon-pop">Status: </div><div id="itemOfferStatus"></div>
+            <div class="cupon-pop">Document URL:</div><div style="padding:0px;"><a id="fileLoc"><button class="downloadOffer">Download</button></a></div>
+            <!-- <a onclick="submitRFQDocument()">Continue...</a> -->
+           </div>           
+                  </div>
+              </div>
+          </div>
+        </div>
+        </div>
+
+    <!-- Delete RFQ Modal -->
+    <div class="container">
+        <!-- <a class="btn btn-primary" data-toggle="modal" href="#ignismyModal">open Popup</a> -->
+        <div class="modal fade" id="rfqDeleteModal" role="dialog">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header" id="offerDetailHeader">
+                    <button type="button" class="offerDetailClose close" data-dismiss="modal" onclick="disableOfferDetailModal()" aria-label=""><span>×</span></button>
+                   </div>
+                  <div class="modal-body" style="background: #f1f3f4;">
+            <h2 class="offerDetailHead">Delete RFQ Confirmation</h2>
+            <h6 class="offerDetailHead">Are you really want to delete this RFQ?</h6>
+            <div class="offerDetailDiv">
+            <div class="cupon-pop">RFQ SGD Number: </div>
+            <div id="rfqSGDDelete"></div>
+            </div>
+            <br>
+            <div><button onclick="deleteRFQ()" class="rfqDeleteButton">Delete</button></div>
+            <div><button onclick="closeDeleteRFQModal()" class="rfqDeleteCancelButton">Cancel</button></div>
+            <!-- <a onclick="submitRFQDocument()">Continue...</a> -->         
+                  </div>
+              </div>
+          </div>
+        </div>
+        </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        function goTo(){
+            if(document.getElementById("create").value=="rfq"){
+                window.location.href="addRFQForm.html"
+            }
+        }
+    </script>
+    <script src="index.js"></script>
+    <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/libs/metismenujs/metismenujs.min.js"></script>
+    <script src="assets/libs/simplebar/simplebar.min.js"></script>
+    <script src="assets/libs/feather-icons/feather.min.js"></script>
+
+    <!-- apexcharts -->
+    <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+
+    <!-- Vector map-->
+    <script src="assets/libs/jsvectormap/js/jsvectormap.min.js"></script>
+    <script src="assets/libs/jsvectormap/maps/world-merc.js"></script>
+    <script src="assets/js/pages/dashboard-sales.init.js"></script>
+    <script src="assets/js/app.js"></script>
+
+    </body>
+<!-- Mirrored from dashonic.django.pichforest.com/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 03 Nov 2022 11:48:41 GMT -->
+</html>
